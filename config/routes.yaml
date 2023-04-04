@@ -3,3 +3,6 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+# home: # le nom de la route, il doit être unique et servira pour générer cette route dans un .twig ou depuis un contrôleur
+#     path: /home # le chemin : par exemple /user/1 sera accessible via http://nom-de-domaine.com/user/1
+#     controller: App\Controller\HomeController::index # namespace du controller et sa ::méthode à appeler lorsque que cette route est appelée

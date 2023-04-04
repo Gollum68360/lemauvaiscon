@@ -1,0 +1,20 @@
+{# <h1>{{ title |upper}}</h1>
+<p>{{ content }}</p>
+{{ createdAt | date("m/d/Y g:i:sA") }}
+{{ dump(createdAt) }} #}
+{% extends '_layout/full-width.html.twig' %}
+
+{% block title %}
+	Bienvenue sur Duckzon !;
+{% endblock %}
+{% block content %}
+	<h1>
+		Le contenu de ma home !
+	</h1>
+	{% for key, annonce in annonces %}
+		<div class="col-md-4">
+			{{ include('annonce/_card.html.twig', {annonce: annonce, key: key}) }}
+		</div>
+	{% endfor %}
+
+{% endblock %}
