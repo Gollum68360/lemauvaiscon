@@ -1,5 +1,10 @@
 <div class="card mb-4 shadow-sm" height="225" width="100%">
-	<img src="https://via.placeholder.com/400?text=Plastic Duck {{ key }}" class="card-img-top" alt="Plastic Duck {{ key }}">
+	<img class="img-fluid card-img-top" alt="Plastic Duck" src="
+																		        {% if annonce.imageUrl is not null %}
+																		            {{ annonce.imageUrl }}
+																		        {% else %}
+																		            https://via.placeholder.com/400?text=Plastic Duck
+																		        {% endif %}">
 	<div class="card-body">
 		<h5 class="card-title">{{ annonce.title }}</h5>
 		<p class="card-text">{{ annonce.description }}</p>
@@ -7,7 +12,7 @@
 			<div class="btn-group">
 				<a href="{{ path('app_annonce_show', {id: annonce.id, slug: annonce.slug}) }}" class="btn btn-sm btn-outline-secondary" type="button">View</a>
 				<a class="btn btn-sm btn-outline-secondary" type="button" href="{{ path('app_annonce_edit', {id: annonce.id}) }}">Edit</a>
-				<form method="post" action="{{ path('app_annonce_delete', {id: annonce.id}) }}">
+				<form method="post" action="{{ path('app_annonce_delete', {id: annonce.id}) }}" onsubmit="return confirm('Êtes vous vraiment sûr ?')">
 					<input type="hidden" name="_method" value="DELETE">
 					<button class="btn btn-danger">Supprimer</button>
 				</form>

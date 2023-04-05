@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Annonce;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query;
 
 /**
  * @extends ServiceEntityRepository<Annonce>
@@ -81,4 +82,10 @@ class AnnonceRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findAllNotSoldQuery(): Query // knp_paginator aura besoin d'un objet de type Query pour fonctionner, c'est pour cela que nous avons besoin de cette fonction
+    {
+        return $this->findNotSoldQuery()
+            ->getQuery();
+    }
 }

@@ -8,13 +8,19 @@
 	Bienvenue sur Duckzon !;
 {% endblock %}
 {% block content %}
-	<h1>
-		Le contenu de ma home !
-	</h1>
-	{% for key, annonce in annonces %}
-		<div class="col-md-4">
-			{{ include('annonce/_card.html.twig', {annonce: annonce, key: key}) }}
-		</div>
-	{% endfor %}
+	<div class="container">
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success">
+				{{ message }}
+			</div>
+		{% endfor %}
+		<h1>
+			Le contenu de ma home !
+		</h1>
+		{% for key, annonce in annonces %}
+			<div class="col-md-4">
+				{{ include('annonce/_card.html.twig', {annonce: annonce, key: key}) }}
+			</div>
+		{% endfor %}
 
-{% endblock %}
+	{% endblock %}

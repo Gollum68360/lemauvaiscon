@@ -11,6 +11,8 @@ use App\Repository\AnnonceRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 class AnnonceController extends AbstractController
 {
@@ -19,10 +21,16 @@ class AnnonceController extends AbstractController
 
 
     #[Route('/annonces', name: 'app_annonce', methods: ['GET'])]
-    public function index(AnnonceRepository $annonceRepository): Response
+    public function index(AnnonceRepository $annonceRepository, PaginatorInterface $paginator, Request $request): Response
     {
 
-        $annonces = $annonceRepository->findAllNotSold();
+
+        $annonces = $paginator->paginate(
+
+            $annonceRepository->findAllNotSold(),
+            $request->query->getInt('page', 1), // on récupère le paramètre page en GET. Si le paramètre page n'existe pas dans l'url, la valeur par défaut sera 1
+            12 // on veut 12 annonces par page
+        );
 
         return $this->render('annonce/index.html.twig', [
             'current_menu' => 'app_annonce_index',
@@ -41,7 +49,7 @@ class AnnonceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em->persist($annonce);
             $em->flush();
-            return $this->redirectToRoute('app_annonce_index');
+            return $this->redirectToRoute('app_annonce');
         }
 
         return $this->render('annonce/new.html.twig', [
@@ -59,13 +67,14 @@ class AnnonceController extends AbstractController
     }
 
     #[Route('/annonce/{id}/edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function edit(Annonce $annonce, Request $request, EntityManagerInterface $em)
+    public function edit(Annonce $annonce, EntityManagerInterface $em, Request $request)
     {
         $form = $this->createForm(AnnonceType::class, $annonce);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) { // si le formulaire est envoyé et s'il est valide
             $em->flush();
-            //return $this->redirectToRoute('app_annonce_edit', ['id' => $annonce->getId()]);
+            $this->addFlash('success', 'Annonce modifiée avec succès');
+            return $this->redirectToRoute('app_annonce');
         }
 
         return $this->render('annonce/edit.html.twig', [
@@ -81,6 +90,6 @@ class AnnonceController extends AbstractController
             $em->remove($annonce);
             $em->flush();
         }
-        return $this->redirectToRoute('app_annonce_index');
+        return $this->redirectToRoute('app_annonce');
     }
 }

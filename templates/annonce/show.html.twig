@@ -6,7 +6,12 @@
 	<div class="container">
 		<div class="row mt-4">
 			<div class="col-md-8">
-				<img class="img-fluid" src="https://via.placeholder.com/800?text=Plastic Duck {{ annonce.id }}">
+				<img class="img-fluid card-img-top" alt="Plastic Duck" src="
+																        {% if annonce.imageUrl is not null %}
+																            {{ annonce.imageUrl }}
+																        {% else %}
+																            https://via.placeholder.com/400?text=Plastic Duck
+																        {% endif %}">
 			</div>
 			<div class="col-md-4">
 				<div class="card mb-4 shadow-sm">

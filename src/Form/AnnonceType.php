@@ -29,13 +29,15 @@ class AnnonceType extends AbstractType
                     'status.perfect' => Annonce::STATUS_PERFECT
                 ]
             ])
+
             ->add('isSold', null, ['label' => 'sold'])
             ->add('createAt', DateType::class, [
                 'label' => 'created_at',
                 'widget' => 'single_text',
                 'input'  => 'datetime_immutable'
             ])
-            ->add('slug', null, ['label' => 'slug']);
+            ->add('slug', null, ['label' => 'slug'])
+            ->add('imageUrl', null, ['label' => 'image']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

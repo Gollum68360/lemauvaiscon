@@ -6,8 +6,14 @@ use App\Repository\AnnonceRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Cocur\Slugify\Slugify;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
+
+
 
 #[ORM\Entity(repositoryClass: AnnonceRepository::class), ORM\HasLifecycleCallbacks]
+#[UniqueEntity('slug')]
 class Annonce
 {
     const STATUS_VERY_BAD = 0;
@@ -26,7 +32,13 @@ class Annonce
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\Length(
+        min: 40,
+        minMessage: "La description doit faire plus de {{ limit }} caractères",
+    )]
     private ?string $description = null;
 
     #[ORM\Column]
@@ -49,6 +61,13 @@ class Annonce
     ])]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    #[Assert\Url(
+        protocols: ['https'],
+
+    )]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageUrl = null;
+
     #[ORM\PrePersist]
     public function prePersist()
     {
@@ -63,6 +82,8 @@ class Annonce
         $this->updatedAt = new \DateTimeImmutable();
         $this->slug = (new Slugify())->slugify($this->title);
     }
+
+
 
 
     public function getId(): ?int
@@ -118,7 +139,7 @@ class Annonce
         $allowedStatus = [
             self::STATUS_VERY_BAD,
             self::STATUS_BAD,
-            self::STATUS_VERY_GOOD,
+            self::STATUS_GOOD,
             self::STATUS_VERY_GOOD,
             self::STATUS_PERFECT
         ];
@@ -180,6 +201,18 @@ class Annonce
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(?string $imageUrl): self
+    {
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }
